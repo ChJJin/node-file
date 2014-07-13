@@ -1,0 +1,35 @@
+{
+  "name": "node-file",
+  "version": "0.0.1",
+  "description": "Extension of nodejs file operations",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChJJin/node-file.git"
+  },
+  "keywords": [
+    "file",
+    "dir",
+    "directory",
+    "fs"
+  ],
+  "author": "ChJJin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ChJJin/node-file/issues"
+  },
+  "homepage": "https://github.com/ChJJin/node-file",
+  "devDependencies": {
+    "gulp": "^3.8.6",
+    "gulp-load-plugins": "^0.5.3",
+    "gulp-concat": "^2.3.3",
+    "gulp-wrap": "^0.3.0",
+    "gulp-util": "^2.2.20"
+  },
+  "dependencies": {
+    "eventproxy": "^0.3.1"
+  }
+}
