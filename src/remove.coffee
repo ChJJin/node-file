@@ -14,7 +14,7 @@ rm = remove = exports.rm = exports.remove = (p, options, cb)->
         proxy = new eventproxy()
         proxy.fail(cb).after 'rm', files.length, ()-> # if files.lengh is 0, cb will be called at once
           fs.rmdir p, (err)->
-            if err.code is 'ENOENT' then err = null
+            if err?.code is 'ENOENT' then err = null
             cb(err)
         for file in files then do (file)->
           newPath = path.join p, file
@@ -23,5 +23,5 @@ rm = remove = exports.rm = exports.remove = (p, options, cb)->
             proxy.emit 'rm'
     else
       fs.unlink p, (err)->
-        if err.code is 'ENOENT' then err = null # no such file
+        if err?.code is 'ENOENT' then err = null # no such file
         cb(err)
