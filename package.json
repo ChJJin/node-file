@@ -27,7 +27,8 @@
     "gulp-load-plugins": "^0.5.3",
     "gulp-concat": "^2.3.3",
     "gulp-wrap": "^0.3.0",
-    "gulp-util": "^2.2.20"
+    "gulp-util": "^2.2.20",
+    "gulp-coffee": "^2.1.1"
   },
   "dependencies": {
     "eventproxy": "^0.3.1"

@@ -1,9 +1,12 @@
 rmSync = removeSync = exports.rmSync = exports.removeSync = (p, options={})->
-	if fs.statSync(p)?.isDirectory()
-		files = fs.readdirSync(p) || []
-		for file in files then do (file)->
-			newPath = path.join p, file
-			removeSync(newPath, options)
-		fs.rmdirSync(p)
-	else
-		fs.unlinkSync(p)
+  try
+    if fs.statSync(p)?.isDirectory()
+      files = fs.readdirSync(p) || []
+      for file in files then do (file)->
+        newPath = path.join p, file
+        removeSync(newPath, options)
+      fs.rmdirSync(p)
+    else
+      fs.unlinkSync(p)
+  catch err
+    return

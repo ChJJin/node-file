@@ -1,7 +1,7 @@
 var gulp = require('gulp'),
     g    = require('gulp-load-plugins')();
 
-gulp.task('build', function{
+gulp.task('build', function(){
   gulp.src('./src/**/*.coffee')
     .pipe(g.concat('node-file.js', {newLine: '\r\n'}))
     .pipe(g.coffee({bare: true}).on('error', g.util.log))
