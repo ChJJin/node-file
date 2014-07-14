@@ -9,4 +9,5 @@ rmSync = removeSync = exports.rmSync = exports.removeSync = (p, options={})->
     else
       fs.unlinkSync(p)
   catch err
-    return
+    if err.code isnt 'ENOENT'
+      throw err
