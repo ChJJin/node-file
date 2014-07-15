@@ -1,30 +1,11 @@
 expect = require('chai').expect
 should = require('chai').should()
 fs = require('fs')
-path = require('path')
 nodeFile = require('../lib/node-file.js')
+helper = require('./test-helper.coffee')
 
 describe 'Remove Tasks', ()->
-  fixture = (p)->
-    path.join __dirname, p
-
-  create = (p)->
-    try
-      fixturePath = fixture(p)
-      if p.indexOf('.') > -1
-        fs.writeFileSync fixturePath, 'hehehe'
-      else
-        fs.mkdirSync fixturePath
-    catch err
-
-  remove = (p)->
-    try
-      fixturePath = fixture(p)
-      if p.indexOf('.') > -1
-        fs.unlinkSync fixturePath
-      else
-        fs.rmdirSync fixturePath
-    catch err
+  {fixture, create, remove} = helper
 
   beforeEach ()->    
     create 'outer'

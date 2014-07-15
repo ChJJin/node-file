@@ -7,6 +7,7 @@ gulp.task('build', function(){
     .pipe(g.coffee({bare: true}).on('error', g.util.log))
     .pipe(g.wrap(['var fs = require("fs");',
       'var path = require("path");',
+      'var util = require("util");',
       'var eventproxy = require("eventproxy");',
       '<%= contents %>'].join('\r\n')))
     .pipe(gulp.dest('./lib'));
