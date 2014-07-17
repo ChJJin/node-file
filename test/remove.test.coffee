@@ -25,10 +25,7 @@ describe 'Remove Tasks', ()->
 
   test = (p, done, exists=true)->
     p = fixture(p)
-    if exists
-      expect(fs.existsSync p).to.be.true
-    else
-      expect(fs.existsSync p).to.be.false
+    expect(fs.existsSync p).to.be[exists]
 
     nodeFile.remove p, (err)->
       expect(fs.existsSync p).to.be.false

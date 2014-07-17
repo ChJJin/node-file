@@ -14,7 +14,8 @@ describe 'Make directory Sync Tasks', ()->
 
   test = (p, done)->
     p = fixture(p)
-    nodeFile.mkdir p, ()->
+    nodeFile.mkdir p, (err)->
+      expect(err).to.not.exist
       expect(fs.existsSync p).to.be.true
       done()
 

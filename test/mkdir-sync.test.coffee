@@ -14,7 +14,10 @@ describe 'Make directory Tasks', ()->
 
   test = (p)->
     p = fixture(p)
-    nodeFile.mkdirSync p
+    try
+      nodeFile.mkdirSync p
+    catch err
+      expect(err).to.not.exist
     expect(fs.existsSync p).to.be.true
 
   it 'should make a directory with one layer', ()->

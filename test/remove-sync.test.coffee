@@ -29,7 +29,7 @@ describe 'Remove-Sync Tasks', ()->
     try
       nodeFile.removeSync p
     catch err
-      expect(err).to.be.null
+      expect(err).to.not.exist
     expect(fs.existsSync p).to.be.false
 
   it 'should remove a folder with files and folders in it', ()->

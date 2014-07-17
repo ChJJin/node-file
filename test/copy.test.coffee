@@ -22,85 +22,74 @@ describe 'Copy Tasks', ()->
     remove 'dest'
 
   remove = (p)->
-    nodeFile.removeSync fixture p
+    nodeFile.removeSync fixture(p)
 
-  testFileExist = (p, exists=true)->
-    expect(fs.existsSync p).to.be[exists]
+  testFileExist = (paths, exists=true)->
+    unless Array.isArray(paths) then paths = [paths]
+    for p in paths
+      p = fixture(p)
+      expect(fs.existsSync p).to.be[exists]
 
-  it 'should copy an empty directory to an existent directory', (done)->
-    src = fixture('src/folderouter/folderinner')
-    dest = fixture('dest')
-    testDest = fixture('dest/folderinner')
-    create 'dest'
+  describe 'if copy to an existent directory', (done)->
+    test = (src, testFolders, done)->
+      src = fixture(src)
+      dest = fixture('dest')
 
-    testFileExist dest
-    testFileExist testDest, false
+      create 'dest'
+      testFileExist 'dest'
+      testFileExist testFolders, false
 
-    nodeFile.copy src, dest, ()->
-      testFileExist testDest, true
-      done()
+      nodeFile.copy src, dest, (err)->
+        expect(err).to.not.exist
+        testFileExist testFolders
+        done()
 
-  it 'should copy a directory with files to an existent directory', (done)->
-    src = fixture('src/folder2')
-    dest = fixture('dest')
-    testDest = fixture('dest/folder2')
-    create 'dest'
+    it 'should copy an empty directory', (done)->
+      src = 'src/folderouter/folderinner'
+      testFolders = ['dest/folderinner']
 
-    testFileExist dest
-    testFileExist testDest, false
-    testFileExist path.join(testDest, 'text.txt'), false
+      test src, testFolders, done
 
-    nodeFile.copy src, dest, ()->
-      testFileExist testDest
-      testFileExist path.join(testDest, 'text.txt')
-      done()
+    it 'should copy a directory with files', (done)->
+      src = 'src/folder2'
+      testFolders = ['dest/folder2', 'dest/folder2/text.txt']
 
-  it 'should copy a directory with folders to an existent directory', (done)->
-    src = fixture('src/folderouter')
-    dest = fixture('dest')
-    testDest = fixture('dest/folderouter')
-    create 'dest'
+      test src, testFolders, done
 
-    testFileExist dest
-    testFileExist testDest, false
-    testFileExist path.join(testDest, 'folderinner'), false
+    it 'should copy a directory with folders', (done)->
+      src = 'src/folderouter'
+      testFolders = ['dest/folderouter', 'dest/folderouter/folderinner']
 
-    nodeFile.copy src, dest, ()->
-      testFileExist testDest
-      testFileExist path.join(testDest, 'folderinner')
-      done()
+      test src, testFolders, done
 
-  it 'should copy a directory with folders and files to an existent directory', (done)->
-    src = fixture('src')
-    dest = fixture('dest')
-    create 'dest'
+    it 'should copy a directory with folders and files', (done)->
+      src = 'src'
+      testFolders = ['dest/src/srctext.txt', 'dest/src/folder2/text.txt',
+                     'dest/src/folder2', 'dest/src/folderouter',
+                     'dest/src/folderouter/folderinner', 'dest/src']
 
-    testFileExist dest
-    testFileExist path.join(dest, 'src/srctext.txt'), false
-    testFileExist path.join(dest, 'src/folder2/text.txt'), false
-    testFileExist path.join(dest, 'src/folder2'), false
-    testFileExist path.join(dest, 'src/folderouter/folderinner'), false
-    testFileExist path.join(dest, 'src/folderouter'), false
-    testFileExist path.join(dest, 'src'), false
+      test src, testFolders, done
 
-    nodeFile.copy src, dest, ()->
-      testFileExist dest
-      testFileExist path.join(dest, 'src/srctext.txt')
-      testFileExist path.join(dest, 'src/folder2/text.txt')
-      testFileExist path.join(dest, 'src/folder2')
-      testFileExist path.join(dest, 'src/folderouter/folderinner')
-      testFileExist path.join(dest, 'src/folderouter')
-      testFileExist path.join(dest, 'src')
-      done()
+    it 'should copy a file', (done)->
+      src = 'src/srctext.txt'
+      testFolders = ['dest/srctext.txt']
 
-  it 'should copy a file to an nonexistent directory', (done)->
-    src = fixture('src/srctext.txt')
-    dest = fixture('dest')
+      test src, testFolders, done
 
-    testFileExist dest, false
-    testFileExist path.join(dest, 'srctext.txt'), false
+  describe 'if copy to an nonexistent directory', (done)->
+    test = (src, testFolders, done)->
+      src = fixture(src)
+      dest = fixture('dest')
 
-    nodeFile.copy src, dest, ()->
-      testFileExist dest
-      testFileExist path.join(dest, 'srctext.txt')
-      done()
+      testFileExist testFolders, false
+
+      nodeFile.copy src, dest, (err)->
+        expect(err).to.not.exist
+        testFileExist testFolders
+        done()
+
+    it 'should copy a file', (done)->
+      src = 'src/srctext.txt'
+      testFolders = ['dest', 'dest/srctext.txt']
+
+      test src, testFolders, done
