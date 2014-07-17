@@ -29,40 +29,40 @@ walk = exports.walk = class Walker
           @_onFile p, stat, next
 
     _deepWalkDirectory: (p, stat, next)->
-      @_onFolder p, stat
-      fs.readdir p, (err, files)=>
-        if err then return @_onError(err)
-        _next = ()=>
-          if file = files.shift()
-            @_walk path.join(p, file), _next
-          else
-            next()
-        _next()
+      @_onFolder p, stat, ()=>
+        fs.readdir p, (err, files)=>
+          if err then return @_onError(err)
+          _next = ()=>
+            if file = files.shift()
+              @_walk path.join(p, file), _next
+            else
+              next()
+          _next()
 
     _broadWalkDirectory: (p, stat, next)->
       @_toWalk ?= []
-      @_onFolder p, stat
-      fs.readdir p, (err, files)=>
-        if err then return @_onError(err)
-        for file in files
-          @_toWalk.push path.join(p, file)
+      @_onFolder p, stat, ()=>
+        fs.readdir p, (err, files)=>
+          if err then return @_onError(err)
+          for file in files
+            @_toWalk.push path.join(p, file)
 
-        _next = ()=>
-          if file = @_toWalk.shift()
-            @_walk file, _next
-          else
-            next()
-        _next()
+          _next = ()=>
+            if file = @_toWalk.shift()
+              @_walk file, _next
+            else
+              next()
+          _next()
 
     _onFile: (p, stat, next)->
       pathObj = @_getPathObj(p)
       @emit 'file', pathObj, stat, next
       @emit 'fad', pathObj, stat # file and directory
 
-    _onFolder: (p, stat)->
+    _onFolder: (p, stat, next)->
       pathObj = @_getPathObj(p)
-      @emit 'directory', pathObj, stat
-      @emit 'folder', pathObj, stat
+      @emit 'directory', pathObj, stat, next
+      @emit 'folder', pathObj, stat, next
       @emit 'fad', pathObj, stat # file and directory
 
     _getPathObj: (p)->

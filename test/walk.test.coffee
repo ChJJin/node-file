@@ -27,8 +27,9 @@ describe 'Walk Tasks', ()->
     walker.on 'file', (p, stat, next)->
       files.push p.relativeToSrc
       next()
-    walker.on 'folder', (p, stat)->
+    walker.on 'folder', (p, stat, next)->
       files.push p.relativeToSrc
+      next()
     walker.on 'end', ()->
       expect(files).to.eql(expectArray)
       done()
@@ -42,8 +43,9 @@ describe 'Walk Tasks', ()->
     walker.on 'file', (p, stat, next)->
       files.push p.relativeToSrc
       next()
-    walker.on 'folder', (p, stat)->
+    walker.on 'folder', (p, stat, next)->
       files.push p.relativeToSrc
+      next()
     walker.on 'end', ()->
       expect(files).to.eql(expectArray)
       done()
