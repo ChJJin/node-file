@@ -30,8 +30,9 @@ describe 'Remove Tasks', ()->
     else
       expect(fs.existsSync p).to.be.false
 
-    nodeFile.remove p, ()->
+    nodeFile.remove p, (err)->
       expect(fs.existsSync p).to.be.false
+      expect(err).to.not.exist
       done()
 
   it 'should remove a folder with files and folders in it', (done)->

@@ -5,7 +5,7 @@ path = require('path')
 nodeFile = require('../lib/node-file.js')
 helper = require('./test-helper.coffee')
 
-describe 'Copy Tasks', ()->
+describe 'Copy Sync Tasks', ()->
   {fixture, create, remove} = helper
 
   beforeEach ()->
@@ -27,7 +27,7 @@ describe 'Copy Tasks', ()->
   testFileExist = (p, exists=true)->
     expect(fs.existsSync p).to.be[exists]
 
-  it 'should copy an empty directory to an existent directory', (done)->
+  it 'should copy an empty directory to an existent directory', ()->
     src = fixture('src/folderouter/folderinner')
     dest = fixture('dest')
     testDest = fixture('dest/folderinner')
@@ -36,11 +36,10 @@ describe 'Copy Tasks', ()->
     testFileExist dest
     testFileExist testDest, false
 
-    nodeFile.copy src, dest, ()->
-      testFileExist testDest, true
-      done()
+    nodeFile.copySync src, dest
+    testFileExist testDest, true
 
-  it 'should copy a directory with files to an existent directory', (done)->
+  it 'should copy a directory with files to an existent directory', ()->
     src = fixture('src/folder2')
     dest = fixture('dest')
     testDest = fixture('dest/folder2')
@@ -50,12 +49,11 @@ describe 'Copy Tasks', ()->
     testFileExist testDest, false
     testFileExist path.join(testDest, 'text.txt'), false
 
-    nodeFile.copy src, dest, ()->
-      testFileExist testDest
-      testFileExist path.join(testDest, 'text.txt')
-      done()
+    nodeFile.copySync src, dest
+    testFileExist testDest
+    testFileExist path.join(testDest, 'text.txt')
 
-  it 'should copy a directory with folders to an existent directory', (done)->
+  it 'should copy a directory with folders to an existent directory', ()->
     src = fixture('src/folderouter')
     dest = fixture('dest')
     testDest = fixture('dest/folderouter')
@@ -65,12 +63,11 @@ describe 'Copy Tasks', ()->
     testFileExist testDest, false
     testFileExist path.join(testDest, 'folderinner'), false
 
-    nodeFile.copy src, dest, ()->
-      testFileExist testDest
-      testFileExist path.join(testDest, 'folderinner')
-      done()
+    nodeFile.copySync src, dest
+    testFileExist testDest
+    testFileExist path.join(testDest, 'folderinner')
 
-  it 'should copy a directory with folders and files to an existent directory', (done)->
+  it 'should copy a directory with folders and files to an existent directory', ()->
     src = fixture('src')
     dest = fixture('dest')
     create 'dest'
@@ -83,24 +80,22 @@ describe 'Copy Tasks', ()->
     testFileExist path.join(dest, 'src/folderouter'), false
     testFileExist path.join(dest, 'src'), false
 
-    nodeFile.copy src, dest, ()->
-      testFileExist dest
-      testFileExist path.join(dest, 'src/srctext.txt')
-      testFileExist path.join(dest, 'src/folder2/text.txt')
-      testFileExist path.join(dest, 'src/folder2')
-      testFileExist path.join(dest, 'src/folderouter/folderinner')
-      testFileExist path.join(dest, 'src/folderouter')
-      testFileExist path.join(dest, 'src')
-      done()
+    nodeFile.copySync src, dest
+    testFileExist dest
+    testFileExist path.join(dest, 'src/srctext.txt')
+    testFileExist path.join(dest, 'src/folder2/text.txt')
+    testFileExist path.join(dest, 'src/folder2')
+    testFileExist path.join(dest, 'src/folderouter/folderinner')
+    testFileExist path.join(dest, 'src/folderouter')
+    testFileExist path.join(dest, 'src')
 
-  it 'should copy a file to an nonexistent directory', (done)->
+  it 'should copy a file to an nonexistent directory', ()->
     src = fixture('src/srctext.txt')
     dest = fixture('dest')
 
     testFileExist dest, false
     testFileExist path.join(dest, 'srctext.txt'), false
 
-    nodeFile.copy src, dest, ()->
-      testFileExist dest
-      testFileExist path.join(dest, 'srctext.txt')
-      done()
+    nodeFile.copySync src, dest
+    testFileExist dest
+    testFileExist path.join(dest, 'srctext.txt')

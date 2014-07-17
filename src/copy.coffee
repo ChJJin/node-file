@@ -3,16 +3,37 @@ copy = exports.copy = (src, dest, options, cb)->
     cb = options
     options = {}
   cb ?= ()->
+  cover = !!options.cover
   src = path.resolve(src)
   dir = path.dirname(src)
   basename = path.basename(src)
 
+  canWrite = (p, cb)->
+    if cover
+      remove p, (err)->
+        if err then return cb(err)
+        cb(null, true)
+    else
+      fs.exists p, (exists)->
+        cb(null, !exists)
+
   copyFile = (from, to, cb)->
-    srcstream = fs.createReadStream from
-    dststream = fs.createWriteStream to
-    srcstream.pipe(dststream)
-    srcstream.on 'end', ()->
-      cb()
+    canWrite to, (err, can)->
+      if err then return cb(err)
+      unless can
+        cb()
+      else
+        called = false
+        srcstream = fs.createReadStream from
+        dststream = fs.createWriteStream to
+        dststream.on 'open', ()->
+          srcstream.pipe(dststream)
+        srcstream.on 'error', (err)->
+          if err and not called then cb(err)
+        dststream.on 'error', (err)->
+          if err and not called then cb(err)
+        dststream.on 'close', ()->
+          if not called then cb()
 
   fs.stat src, (err, stat)->
     if err then return cb(err)
@@ -31,7 +52,5 @@ copy = exports.copy = (src, dest, options, cb)->
             proxy.emit 'copy'
     else # copy file
       mkdir dest, (err)->
-        console.log dest
-        console.log fs.existsSync dest
         if err then return cb(err)
         copyFile src, path.join(dest, basename), cb

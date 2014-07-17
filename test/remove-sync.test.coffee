@@ -25,12 +25,11 @@ describe 'Remove-Sync Tasks', ()->
 
   test = (p, exists=true)->
     p = fixture(p)
-    if exists
-      expect(fs.existsSync p).to.be.true
-    else
-      expect(fs.existsSync p).to.be.false
-
-    nodeFile.removeSync p
+    expect(fs.existsSync p).to.be[exists]
+    try
+      nodeFile.removeSync p
+    catch err
+      expect(err).to.be.null
     expect(fs.existsSync p).to.be.false
 
   it 'should remove a folder with files and folders in it', ()->
